@@ -30,5 +30,4 @@ const reportMissingPerson = async (req, res, supabase) => {
     });
   };
   
-  module.exports = { reportMissingPerson };
-  
+  module.exports = { reportMissingPerson };  
