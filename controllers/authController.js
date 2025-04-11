@@ -36,10 +36,10 @@ const registerUser = async (req, res, supabase) => {
   }
 };
 
-// User Login
 const loginUser = async (req, res, supabase) => {
   const { email, password } = req.body;
 
+  // Fetch user from database
   const { data, error } = await supabase
     .from('users')
     .select('*')
@@ -57,10 +57,15 @@ const loginUser = async (req, res, supabase) => {
 
   const userRole = data.role;
 
-  if (userRole === 'law_enforcement' && !data.officer_verification) {
-    return res.status(403).json({ error: 'Law enforcement account not yet verified' });
+  // Allow login only for law enforcement users
+  if (userRole !== 'law_enforcement') {
+    return res.status(403).json({ error: 'Only law enforcement accounts can log in' });
   }
 
+  // Remove officer verification check for law enforcement
+  // Proceed with login regardless of officer verification status
+
+  // Generate JWT token
   const token = jwt.sign(
     { id: data.user_id, role: userRole },
     process.env.JWT_SECRET,
@@ -70,6 +75,7 @@ const loginUser = async (req, res, supabase) => {
   const user = { ...data };
   delete user.password;
 
+  // Respond with login success and token
   res.status(200).json({ 
     message: `Login successful as ${userRole.replace('_', ' ')}`, 
     token, 
