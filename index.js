@@ -16,6 +16,7 @@ const alertRoutes = require('./routes/alerts');
 const communityRoutes = require('./routes/community');
 const officerRoutes = require('./routes/officers');
 const analyticsRoutes = require('./routes/analytics');
+const reportRoutes = require('./routes/reportRoutes')(supabase);
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -33,6 +34,7 @@ app.use('/api/alerts', alertRoutes(supabase));
 app.use('/api/community', communityRoutes(supabase));
 app.use('/api/officers', officerRoutes(supabase));
 app.use('/api/analytics', analyticsRoutes(supabase));
+app.use('/api/reports', reportRoutes);
 
 app.get('/', (req, res) => {
   res.send('API Running');
