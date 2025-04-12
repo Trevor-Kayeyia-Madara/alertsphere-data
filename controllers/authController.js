@@ -57,11 +57,6 @@ const loginUser = async (req, res, supabase) => {
 
   const userRole = data.role;
 
-  // Allow login only for law enforcement users
-  if (userRole !== 'law_enforcement') {
-    return res.status(403).json({ error: 'Only law enforcement accounts can log in' });
-  }
-
   // Remove officer verification check for law enforcement
   // Proceed with login regardless of officer verification status
 
