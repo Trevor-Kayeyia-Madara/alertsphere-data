@@ -5,6 +5,6 @@ const router = express.Router();
 
 module.exports = (supabase) => {
   router.post('/send', (req, res) => sendNotification(req, res, supabase));
-  router.get('/:userId', (req, res) => getNotifications(req, res, supabase));
+  router.get('/', (req, res) => getNotifications(req, res, supabase));
   return router;
 };
