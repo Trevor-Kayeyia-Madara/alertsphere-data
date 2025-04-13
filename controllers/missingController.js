@@ -41,4 +41,28 @@ const updateMissingPersonStatus = async (req, res, supabase) => {
   res.status(200).json({ message: 'Missing person status updated successfully', updatedPerson: data });
 };
 
-module.exports = { reportMissingPerson, updateMissingPersonStatus };
+// missingController.js
+
+// Function to fetch all missing persons or filter by status (optional)
+const getMissingPersons = async (req, res, supabase) => {
+  const { status } = req.query;  // Optional query parameter to filter by status (e.g., Missing, Found, Recovered)
+  
+  // Build the query
+  let query = supabase.from('missing_person_reports').select('*');
+
+  // If a status is provided, filter the results by status
+  if (status && ['Missing', 'Found', 'Recovered'].includes(status)) {
+    query = query.eq('status', status);
+  }
+
+  // Execute the query
+  const { data, error } = await query;
+
+  if (error) {
+    return res.status(400).json({ error: error.message });
+  }
+
+  res.status(200).json({ missingPersons: data });
+};
+
+module.exports = { reportMissingPerson, updateMissingPersonStatus, getMissingPersons };

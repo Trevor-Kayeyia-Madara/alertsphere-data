@@ -49,5 +49,25 @@ const updateCrimeStatus = async (req, res, supabase) => {
 
   res.status(200).json({ message: 'Crime report status updated successfully', updatedCrime: data });
 };
+const getCrimeReports = async (req, res, supabase) => {
+  const { status } = req.query;  // Optional query parameter to filter by status (e.g., Pending, Resolved, Under Investigation)
+  
+  // Build the query
+  let query = supabase.from('crime_reports').select('*');
+  
+  // If a status is provided, filter the results by status
+  if (status && ['Pending', 'Resolved', 'Under Investigation'].includes(status)) {
+    query = query.eq('status', status);
+  }
+  
+  // Execute the query
+  const { data, error } = await query;
 
-module.exports = { reportCrime, updateCrimeStatus };
+  if (error) {
+    return res.status(400).json({ error: error.message });
+  }
+
+  res.status(200).json({ crimeReports: data });
+};
+
+module.exports = { reportCrime, updateCrimeStatus, getCrimeReports };
