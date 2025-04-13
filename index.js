@@ -21,7 +21,16 @@ const reportRoutes = require('./routes/reportRoutes')(supabase);
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+// CORS Configuration
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN || '*', // You can replace '*' with specific domains like 'http://localhost:3000' or 'https://your-frontend-domain.com'
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'], // Allowing CRUD operations
+  allowedHeaders: ['Content-Type', 'Authorization'], // Specify allowed headers
+  credentials: true,  // Enable credentials if you need to send cookies or authorization headers
+};
+
+app.use(cors(corsOptions));  // Apply the CORS middleware with the options
+
 app.use(express.json());
 
 // Pass supabase into each route
