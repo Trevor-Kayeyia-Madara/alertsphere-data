@@ -27,5 +27,27 @@ const reportCrime = async (req, res, supabase) => {
     report: data,
   });
 };
+// Function to update the status of a crime report
+const updateCrimeStatus = async (req, res, supabase) => {
+  const { reportId } = req.params;  // Get the report_id from the route params
+  const { status } = req.body;      // Get the status from the request body
 
-module.exports = { reportCrime };
+  // Validate that the status is valid
+  if (!['Pending', 'Resolved', 'Under Investigation'].includes(status)) {
+    return res.status(400).json({ error: 'Invalid status provided' });
+  }
+
+  // Update the status of the crime report in the database
+  const { data, error } = await supabase
+    .from('crime_reports')
+    .update({ status })
+    .eq('report_id', reportId);
+
+  if (error) {
+    return res.status(400).json({ error: error.message });
+  }
+
+  res.status(200).json({ message: 'Crime report status updated successfully', updatedCrime: data });
+};
+
+module.exports = { reportCrime, updateCrimeStatus };
